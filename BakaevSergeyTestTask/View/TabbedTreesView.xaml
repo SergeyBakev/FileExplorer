@@ -1,0 +1,34 @@
+﻿<UserControl 
+        x:Class="BakaevSergeyTestTask.View.TabbedTreesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vw="clr-namespace:BakaevSergeyTestTask.View"
+        xmlns:vm="clr-namespace:BakaevSergeyTestTask.ViewModel"
+        xmlns:mdl="clr-namespace:BakaevSergeyTestTask.Model"
+        mc:Ignorable="d"
+        d:DesignHeight="300"
+        d:DesignWidth="300" 
+        x:Name="CurrentTabbedNavTreesName">
+    <UserControl.Resources>
+        <DataTemplate x:Key="templateNavTreeHeader" DataType="{x:Type vm:TreeVm}">
+            <TextBlock Margin="3,2,3,2" FontSize="10" Text="{Binding TreeName}"/>
+        </DataTemplate>
+        <Style x:Key="mimicTabControlHeader" TargetType="ListBox">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="{Binding MaxRowsNavTrees}"/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" SharedSizeGroup="Headers"/>
+        </Grid.RowDefinitions>
+        <vw:TreeView Grid.Row="1" DataContext="{Binding SelectedNavTree}" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,64 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
+
+namespace BakaevSergeyTestTask.Model
+{
+    public interface ITreeItem : INotifyPropertyChanged
+    {
+        string FriendlyName { get; set; }
+        string FullPathName { get; set; }
+        string DataCreate { get; set; }
+        ObservableCollection<ITreeItem> Children { get; }
+        BitmapSource MyIcon { get; set; }
+        bool IncludeFileChildren { get; set; }
+        bool IsExpanded { get; set; }
+        void DeleteChildren();
+    }
+    public abstract class ATreeItem : ViewModelBase, ITreeItem
+    {
+        public string FriendlyName { get; set; }
+        public string FullPathName { get; set; }
+        public string DataCreate { get; set; }
+        protected BitmapSource myIcon;
+        public BitmapSource MyIcon
+        {
+            get { return myIcon ?? (myIcon = GetMyIcon()); }
+            set { myIcon = value; }
+        }
+        protected ObservableCollection<ITreeItem> children;
+        public ObservableCollection<ITreeItem> Children
+        {
+            get { return children ?? (children = GetMyChildren()); }
+            set { SetProperty(ref children, value, "Children"); }
+        }
+        private bool isExpanded;
+        public bool IsExpanded
+        {
+            get { return isExpanded; }
+            set { SetProperty(ref isExpanded, value, "IsExpanded"); }
+        }
+        public abstract ObservableCollection<ITreeItem> GetMyChildren();
+        public void DeleteChildren()
+        {
+            if (children != null)
+            {
+                for (int i = children.Count - 1; i >= 0; i--)
+                {
+                    children[i].DeleteChildren();
+                    children[i] = null;
+                    children.RemoveAt(i);
+                }
+
+                children = null;
+            }
+        }
+        public abstract BitmapSource GetMyIcon();
+        public bool IncludeFileChildren { get; set; }
+    }
+}
